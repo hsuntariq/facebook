@@ -1,0 +1,8 @@
+.reg-form{
+    height: 100vh;
+    width: 100vw;
+    background: rgba(255,255,255,0.6);
+    position: fixed;
+    top: 0;
+    
+}
