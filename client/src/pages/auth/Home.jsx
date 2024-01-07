@@ -3,8 +3,20 @@ import LogForm from './LogForm'
 import '../styles/authStyles.css'
 import RegForm from './RegForm'
 import { useState } from 'react'
+import { ClockLoader } from 'react-spinners'
+import { useSelector } from 'react-redux'
 const Home = () => {
+
+    // get the state from the slice
+    const { isLoading } = useSelector(state => state.auth)
     const [showForm, setShowForm] = useState(false);
+
+
+
+    const showReg = () => {
+        setShowForm(!showForm);
+    }
+
     const makeDate = () => {
         let dates = [];
         let i = 1;
@@ -28,6 +40,13 @@ const Home = () => {
         return years;
     }
 
+    if (isLoading) {
+        return <div style={{ height: '100vh', width: '100vw' }} className='d-flex justify-content-center align-items-center'>
+            <ClockLoader color="#0D6EFD" />
+        </div>
+
+    }
+
     return (
         <>
             <Container style={{ height: '80vh' }} className='d-flex align-items-center justify-content-center'>
@@ -43,12 +62,12 @@ const Home = () => {
                         </p>
                     </Col>
                     <Col lg={6}>
-                        <LogForm />
+                        <LogForm show={showReg} />
                     </Col>
                 </Row>
             </Container>
 
-            <RegForm showForm={showForm} makeDate={makeDate} makeYear={makeYear} months={months} />
+            <RegForm show={showReg} showForm={showForm} makeDate={makeDate} makeYear={makeYear} months={months} />
         </>
     )
 }

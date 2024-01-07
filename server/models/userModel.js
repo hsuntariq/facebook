@@ -9,14 +9,11 @@ const userSchema = mongoose.Schema({
         type: String,
         required: [true, 'Please enter l_name']
     },
-    m_number: {
+    m_mail: {
         type: String,
         required: [true, 'Please enter mobile number']
     },
-    email: {
-        type: String,
-        required: [true, 'Please enter Email']
-    },
+
     password: {
         type: String,
         required: [true, 'Please enter password']

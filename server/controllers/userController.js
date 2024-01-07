@@ -3,11 +3,9 @@ const AsyncHandler = require('express-async-handler')
 const bcrypt = require('bcrypt')
 
 const registerUser = AsyncHandler(async (req, res) => {
-    const { f_name, l_name, m_number, email, password, DOB, gender, image } = req.body;
+    const { f_name, l_name, m_mail, password, DOB, gender, image } = req.body;
     // check if user already exists
-    const checkUser = await User.findOne({
-        $or: [{ email, m_number }]
-    })
+    const checkUser = await User.findOne({ m_mail })
     if (checkUser) {
         res.status(400);
         throw new Error('User already exists!');
@@ -18,8 +16,7 @@ const registerUser = AsyncHandler(async (req, res) => {
             {
                 f_name,
                 l_name,
-                m_number,
-                email,
+                m_mail,
                 password: hashedPassword,
                 DOB,
                 gender,
@@ -33,10 +30,8 @@ const registerUser = AsyncHandler(async (req, res) => {
 })
 
 const loginUser = AsyncHandler(async (req, res) => {
-    const { m_number, email, password } = req.body;
-    const findUser = await User.findOne({
-        $or: [{ email }, { m_number }]
-    })
+    const { m_mail, password } = req.body;
+    const findUser = await User.findOne({ m_mail })
     if (!findUser) {
         res.status(404);
         throw new Error('User does not exist');
