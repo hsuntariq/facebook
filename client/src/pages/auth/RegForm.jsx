@@ -2,15 +2,38 @@ import { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap"
 import { RxCross1 } from "react-icons/rx";
 import { toast } from "react-toastify";
-import { useDispatch, useSelector } from 'react-redux'
-import { signUP } from "../../features/auth/authSlice";
 import { ClockLoader } from 'react-spinners'
+import { useDispatch, useSelector } from 'react-redux'
+import { registerUser, reset } from "../../features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 const RegForm = ({ show, makeDate, makeYear, months, showForm }) => {
 
-    // import use dispatch,kon sa function chalana ha
+
+    // navigate
+    const navigate = useNavigate()
+
+
+    // khali btana ha k konsa function chalana ha=>useDispatch()
     const dispatch = useDispatch()
-    // select specific state from the initial state
-    const { isLoading, isError, isSuccess, message } = useSelector(state => state.auth)
+    // state maise chezain utha k lao => useSelector()
+    const { isSuccess, isError, isLoading, user, message } = useSelector(state => state.auth);
+
+
+    // check if user is registerd successfully
+
+    useEffect(() => {
+        if (isSuccess) {
+            navigate('/home')
+        }
+
+        dispatch(reset())
+
+    }, [isSuccess, dispatch, navigate])
+
+
+
+
+
 
     const [formFields, setFormFields] = useState({
         f_name: '', l_name: '', m_mail: '', password: '', date: '19', month: 'Jan', year: '2024', gender: ''
@@ -43,14 +66,16 @@ const RegForm = ({ show, makeDate, makeYear, months, showForm }) => {
     const handleClick = (e) => {
         e.preventDefault()
         if (!f_name || !l_name || !m_mail || !password || !date || !month || !year || !gender) {
-            toast.error('Please enter all the fields!')
+            toast.error('Please enter all the fields')
         } else {
-            const formData = {
+            const data = {
                 f_name, l_name, m_mail, password, DOB, gender
             }
-            dispatch(signUP(formData))
+            dispatch(registerUser(data))
         }
     }
+
+
 
 
 

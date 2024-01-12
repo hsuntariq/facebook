@@ -7,8 +7,7 @@ import { ClockLoader } from 'react-spinners'
 import { useSelector } from 'react-redux'
 const Home = () => {
 
-    // get the state from the slice
-    const { isLoading } = useSelector(state => state.auth)
+    const { isLoading } = useSelector(state => state.auth);
     const [showForm, setShowForm] = useState(false);
 
 
@@ -41,11 +40,14 @@ const Home = () => {
     }
 
     if (isLoading) {
-        return <div style={{ height: '100vh', width: '100vw' }} className='d-flex justify-content-center align-items-center'>
-            <ClockLoader color="#0D6EFD" />
+
+        return <div className='d-flex justify-content-center align-items-center' style={{ height: '100vh' }}>
+            <ClockLoader color='#0D6EFD' />
         </div>
 
     }
+
+
 
     return (
         <>

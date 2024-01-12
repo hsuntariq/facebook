@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { authService } from './authService';
 
-
+// check if user is stored in the localstorage
 const user = JSON.parse(localStorage.getItem('user'));
 
-// define the initialState
+// create the initial state
 const initialState = {
     user: user ? user : null,
     isLoading: false,
@@ -15,14 +15,20 @@ const initialState = {
 
 
 
-// handle the registration
-
-export const signUP = createAsyncThunk('auth/register', async (formData, thunkAPI) => {
+export const registerUser = createAsyncThunk('auth/register', async (data, thunkAPI) => {
     try {
-        return authService.registerUser(formData)
+        return await authService.signUP(data)
     } catch (error) {
-        const message = (error.response && error.response.data && error.response.data.message) || error.toString();
-        return thunkAPI.rejectWithValue(message)
+
+    }
+})
+
+
+export const logout = createAsyncThunk('auth/logout', (_, thunkAPI) => {
+    try {
+        return authService.signOUT()
+    } catch (error) {
+
     }
 })
 
@@ -30,37 +36,48 @@ export const signUP = createAsyncThunk('auth/register', async (formData, thunkAP
 
 // create the slice
 
-export const authSlice = createSlice({
+const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
         reset: (state) => {
-            state.isError = false;
-            state.isSuccess = false;
             state.isLoading = false;
-            state.message = '';
+            state.isSuccess = false;
+            state.isError = false;
+            state.message = ''
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(signUP.pending, (state) => {
+            .addCase(registerUser.pending, (state) => {
                 state.isLoading = true
             })
-            .addCase(signUP.rejected, (state, action) => {
+            .addCase(registerUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;
                 state.user = null;
             })
-            .addCase(signUP.fulfilled, (state, action) => {
+            .addCase(registerUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.user = action.payload
+                state.user = action.payload;
+            })
+            .addCase(logout.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(logout.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = "An Error Occured"
+            })
+            .addCase(logout.fulfilled, (state, action) => {
+                state.isLoading = true;
+                state.isSuccess = true;
+                state.user = null
             })
     }
-});
-
+})
 
 export const { reset } = authSlice.actions;
 export default authSlice.reducer;
-
