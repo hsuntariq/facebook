@@ -1,7 +1,7 @@
 const User = require('../models/userModel')
 const AsyncHandler = require('express-async-handler')
 const bcrypt = require('bcrypt')
-
+const jwt = require('jsonwebtoken')
 const registerUser = AsyncHandler(async (req, res) => {
     const { f_name, l_name, m_mail, password, DOB, gender, image } = req.body;
     // check if user already exists
@@ -24,27 +24,49 @@ const registerUser = AsyncHandler(async (req, res) => {
             }
         )
 
-        res.send(createdUser)
+        res.json(
+            {
+                f_name,
+                l_name,
+                m_mail,
+                password: hashedPassword,
+                DOB,
+                gender,
+                image,
+                token: generateToken(createdUser._id)
+            }
+        )
     }
 
 })
 
 const loginUser = AsyncHandler(async (req, res) => {
+    // get the data from the user
     const { m_mail, password } = req.body;
+    if (!m_mail || !password) {
+        res.status(400)
+        throw new Error('Please enter the fields')
+    }
     const findUser = await User.findOne({ m_mail })
     if (!findUser) {
         res.status(404);
-        throw new Error('User does not exist');
-    } else {
-        if (await bcrypt.compare(password, findUser.password)) {
-            res.send('Logged in successfully')
-        } else {
-            res.status(401);
-            res.send('Invalid Credentials')
-        }
+        throw new Error('User not found')
     }
-
+    if (findUser && (await bcrypt.compare(password, findUser.password))) {
+        res.status(200);
+        res.send(findUser)
+    } else {
+        res.status(401);
+        throw new Error('Invalid Credentials')
+    }
 })
+
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: '1d'
+    })
+}
+
 
 module.exports = {
     registerUser,

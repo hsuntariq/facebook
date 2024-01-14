@@ -1,12 +1,27 @@
-import React from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../features/auth/authSlice'
+import { useNavigate } from 'react-router-dom'
+import Header from './Header'
+
 const Home = () => {
+    const { user } = useSelector(state => state.auth)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (!user) {
+            navigate('/')
+        }
+    }, [user, navigate])
+
+    const handleLogout = () => {
+        dispatch(logout())
+        navigate('/')
+    }
     return (
         <>
-            <h1>Welcome to the home page</h1>
-            <button onClick={dispatch(logout())}>Logout</button>
+            <Header />
         </>
 
     )

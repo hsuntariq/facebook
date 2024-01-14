@@ -2,13 +2,22 @@ import { Col, Container, Form, Row } from 'react-bootstrap'
 import LogForm from './LogForm'
 import '../styles/authStyles.css'
 import RegForm from './RegForm'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ClockLoader } from 'react-spinners'
 import { useSelector } from 'react-redux'
-const Home = () => {
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
-    const { isLoading } = useSelector(state => state.auth);
+const Home = () => {
+    const navigate = useNavigate()
+    const { user, isLoading, isError, message } = useSelector(state => state.auth);
     const [showForm, setShowForm] = useState(false);
+
+    useEffect(() => {
+        if (user) {
+            navigate('/home')
+        }
+    }, [user, navigate])
 
 
 
@@ -38,6 +47,13 @@ const Home = () => {
         }
         return years;
     }
+
+    useEffect(() => {
+        if (isError) {
+            toast.error(message)
+        }
+    }, [isError, message])
+
 
     if (isLoading) {
 

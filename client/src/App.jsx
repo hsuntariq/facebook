@@ -8,6 +8,7 @@ import { ToastContainer } from 'react-toastify';
 const App = () => {
   return (
     <Router>
+      <ToastContainer />
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/home' element={<Main />} />
