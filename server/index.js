@@ -14,7 +14,8 @@ connectDB()
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use('/api/users/', require('./routes/userRoutes'));
-app.use('/api/posts/', require('./routes/postRoutes'))
+app.use('/api/posts/', require('./routes/postRoutes'));
+app.use('/api/caption/', require('./routes/captionRoutes'))
 app.use(errorHandler)
 
 app.listen(process.env.PORT, () => console.log(`Server started on port:${process.env.PORT.yellow}`))

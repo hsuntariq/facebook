@@ -29,7 +29,6 @@ const registerUser = AsyncHandler(async (req, res) => {
                 f_name,
                 l_name,
                 m_mail,
-                password: hashedPassword,
                 DOB,
                 gender,
                 image,
@@ -54,7 +53,16 @@ const loginUser = AsyncHandler(async (req, res) => {
     }
     if (findUser && (await bcrypt.compare(password, findUser.password))) {
         res.status(200);
-        res.send(findUser)
+        res.send({
+            _id: findUser._id,
+            f_name: findUser.f_name,
+            l_name: findUser.l_name,
+            m_mail: findUser.m_mail,
+            DOB: findUser.DOB,
+            gender: findUser.gender,
+            image: findUser.image,
+            token: generateToken(findUser._id)
+        })
     } else {
         res.status(401);
         throw new Error('Invalid Credentials')
