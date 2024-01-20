@@ -1,10 +1,10 @@
 const Post = require('../models/postModel');
 const AsyncHandler = require('express-async-handler');
 const createPosts = AsyncHandler(async (req, res) => {
-    const { caption, image } = req.body
+    const { user, caption, image } = req.body
     try {
         const createdPost = await Post.create({
-            caption, image, user: req.user._id
+            caption, image, user
         })
         res.send(createdPost)
     } catch (error) {
