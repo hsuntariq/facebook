@@ -30,6 +30,15 @@ export const postImage = createAsyncThunk('posts/post-image', async (imageData, 
 })
 
 
+export const getPostData = createAsyncThunk('posts/get-post', async (_, thunkAPI) => {
+    try {
+        return await postService.getPosts()
+    } catch (error) {
+        thunkAPI.rejectWithValue(error.response.data.error)
+    }
+})
+
+
 export const postSlice = createSlice({
     name: 'posts',
     initialState,
@@ -69,6 +78,20 @@ export const postSlice = createSlice({
                 state.postLoading = false;
                 state.postSuccess = true;
                 state.postImages.push(action.payload)
+            })
+            .addCase(getPostData.pending, (state) => {
+                state.postLoading = true
+            })
+            .addCase(getPostData.rejected, (state, action) => {
+                state.postLoading = false;
+                state.postError = true;
+                state.postMessage = action.payload;
+            })
+            .addCase(getPostData.fulfilled, (state, action) => {
+                console.log(action)
+                state.postLoading = false;
+                state.postSuccess = true;
+                state.posts = action.payload
             })
     }
 

@@ -13,7 +13,14 @@ const postImage = async (imageData) => {
 }
 
 
+const getPosts = async () => {
+    const response = await axios.get(`${base_url}/posts/get-posts`)
+    return response.data
+}
+
+
 export const postService = {
     postCaption,
-    postImage
+    postImage,
+    getPosts
 }

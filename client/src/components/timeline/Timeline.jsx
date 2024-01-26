@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Card, Form } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { IoIosSend } from "react-icons/io";
 import { postData, postImage } from '../../features/post/postSlice';
 import { SyncLoader } from 'react-spinners'
 import { BiImages } from "react-icons/bi";
+import Posts from './Posts';
 const Timeline = () => {
     const [image, setImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
@@ -32,6 +33,8 @@ const Timeline = () => {
         setImage(file);
     }
 
+
+
     const uploadImage = async (e) => {
         const data = new FormData();
         data.append('file', image);
@@ -57,10 +60,15 @@ const Timeline = () => {
     const handleClick = async () => {
         const imageURL = await uploadImage(image)
         const data = {
-            user: user._id, caption: caption, image: imageURL
+            user: user?._id, caption: caption, image: imageURL
         }
 
+
+
         dispatch(postImage(data))
+
+        setImagePreview(null);
+        setImage(null)
 
     }
 
@@ -97,6 +105,7 @@ const Timeline = () => {
                 </Card.Body>}
 
             </Card>
+            <Posts />
         </>
     )
 }

@@ -14,6 +14,13 @@ const createPosts = AsyncHandler(async (req, res) => {
 
 })
 
+
+const getPosts = AsyncHandler(async (req, res) => {
+    const posts = await Post.find();
+    res.send(posts)
+})
+
 module.exports = {
-    createPosts
+    createPosts,
+    getPosts
 }

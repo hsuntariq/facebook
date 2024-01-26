@@ -26,10 +26,16 @@ const signIn = async (userData) => {
     return response.data
 }
 
+const getAllUsers = async () => {
+    const response = await axios.get(`${base_url}/get-users`);
+    return response.data
+}
+
 
 export const authService = {
     signUP,
     signOUT,
-    signIn
+    signIn,
+    getAllUsers
 }
 
