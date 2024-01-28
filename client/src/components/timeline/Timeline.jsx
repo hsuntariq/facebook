@@ -105,7 +105,7 @@ const Timeline = () => {
                 </Card.Body>}
 
             </Card>
-            <Posts />
+            <Posts caption={caption} image={image} />
         </>
     )
 }

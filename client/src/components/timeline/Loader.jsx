@@ -18,7 +18,7 @@ const Loader = () => {
                     </div>
                 </Card.Header>
                 <Card.Body>
-                    <Skeleton height={500} width={'100%'} />
+                    <Skeleton className='rounded-4' height={500} width={'100%'} />
                     <div className="row p-0 m-0 mt-2">
                         <div className="col-4 p-0 m-0  border">
                             <Skeleton width={'100%'} />

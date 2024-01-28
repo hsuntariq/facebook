@@ -4,6 +4,7 @@ import Home from './pages/auth/Home';
 import Main from './pages/home/Home';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import SinglePost from './components/singlePost/SinglePost';
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/home' element={<Main />} />
+        <Route path='/single-post/:id' element={<SinglePost />} />
       </Routes>
     </Router>
   )

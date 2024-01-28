@@ -19,8 +19,27 @@ const getPosts = async () => {
 }
 
 
+const likePost = async (likeData) => {
+    const response = await axios.post(`${base_url}/posts/like-post`, likeData)
+    return response.data
+}
+
+const singlePost = async (data) => {
+    const response = await axios.get(`http://localhost:5175/api/posts/get-single-post`, data);
+    return response.data
+}
+
+const sharePost = async (data) => {
+    const response = await axios.post(`${base_url}/posts/share-post`, data);
+    return response.data
+}
+
+
 export const postService = {
     postCaption,
     postImage,
-    getPosts
+    getPosts,
+    likePost,
+    singlePost,
+    sharePost
 }
