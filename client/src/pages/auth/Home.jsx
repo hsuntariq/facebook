@@ -16,6 +16,8 @@ const Home = () => {
     useEffect(() => {
         if (user) {
             navigate('/home')
+        } else {
+            navigate('/')
         }
     }, [user, navigate])
 

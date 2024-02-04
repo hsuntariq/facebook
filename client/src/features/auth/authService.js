@@ -31,11 +31,22 @@ const getAllUsers = async () => {
     return response.data
 }
 
+const sendResetMail = async (mail) => {
+    const response = await axios.post(`${base_url}/get-reset-link`, mail);
+    return response.data
+}
+const updatePassword = async (data) => {
+    const response = await axios.post(`${base_url}/update-password`, data);
+    return response.data
+}
+
 
 export const authService = {
     signUP,
     signOUT,
     signIn,
-    getAllUsers
+    getAllUsers,
+    sendResetMail,
+    updatePassword
 }
 

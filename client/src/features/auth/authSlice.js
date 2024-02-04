@@ -49,6 +49,22 @@ export const getUserData = createAsyncThunk('auth/getData', async (_, thunkAPI) 
         return thunkAPI.rejectWithValue(message)
     }
 })
+export const resetMail = createAsyncThunk('auth/reset-link', async (data, thunkAPI) => {
+    try {
+        return await authService.sendResetMail(data)
+    } catch (error) {
+        const message = error.response.data.error
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+export const updatedPass = createAsyncThunk('auth/update-pass', async (data, thunkAPI) => {
+    try {
+        return await authService.updatePassword(data)
+    } catch (error) {
+        const message = error.response.data.error
+        return thunkAPI.rejectWithValue(message)
+    }
+})
 
 
 // create the slice
@@ -120,6 +136,35 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.allUsers = action.payload;
+            })
+            .addCase(resetMail.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(resetMail.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(resetMail.fulfilled, (state, action) => {
+                console.log(action)
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload;
+            })
+            .addCase(updatedPass.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(updatedPass.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(updatedPass.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload;
+                state.user = null;
+                localStorage.removeItem('user')
             })
 
     }

@@ -11,15 +11,16 @@ import { RiShareForwardLine } from "react-icons/ri";
 import { BsFillHeartFill } from "react-icons/bs";
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify'
-const Posts = ({ caption, image }) => {
+const Posts = ({ caption, images }) => {
     const dispatch = useDispatch();
     const { allUsers, isLoading, user } = useSelector(state => state.auth)
     const { posts, postLoading, postImages, postSuccess, shared } = useSelector(state => state.caption)
     useEffect(() => {
-        dispatch(getUserData())
-        dispatch(getPostData())
-
-    }, [postImages])
+        if (user) {
+            dispatch(getUserData())
+            dispatch(getPostData())
+        }
+    }, [postImages, user])
 
     useEffect(() => {
         if (shared) {

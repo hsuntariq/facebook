@@ -2,6 +2,8 @@ const User = require('../models/userModel')
 const AsyncHandler = require('express-async-handler')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const { v4: uuidv4 } = require('uuid')
+const nodeMailer = require('nodemailer')
 const registerUser = AsyncHandler(async (req, res) => {
     const { f_name, l_name, m_mail, password, DOB, gender, image } = req.body;
     // check if user already exists
@@ -76,6 +78,88 @@ const getAllUser = AsyncHandler(async (req, res) => {
     res.send(users);
 })
 
+
+const sendResetLink = AsyncHandler(async (req, res) => {
+
+    //  get the email
+    const { email } = req.body;
+    // get the user with the provided email
+    const findUser = await User.findOne({ m_mail: email });
+    // check if user exists
+    if (!findUser) {
+        res.status(404)
+        throw new Error('Invalid Email address')
+    } else {
+        const token = uuidv4();
+        const expireToken = new Date(Date.now() + 3600);
+        // update the user
+        findUser.resetToken = token;
+        findUser.expirationTime = expireToken;
+        await findUser.save();
+
+        // send the mail
+        // 1.create the configurations
+        const transporter = nodeMailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: "hassan130799@gmail.com",
+                pass: "qzbuunjppbcxijar"
+            }
+        })
+
+        // 2. create the mail options
+        const mailOptions = {
+            from: "hassan130799@gmail.com",
+            to: email,
+            subject: "Reset your password",
+            html: `
+            <img width='200px' height='200px' src='https://github.com/hsuntariq/TalkTango/blob/main/client/src/assets/logo.png?raw=true' style='display:block;margin:auto;border-radius:50%;'/><br>
+            <h3>Following is the reset link</h3>
+            <h4>http://localhost:3000/reset-password/${token}</h4>  
+            `
+        }
+
+
+        try {
+            transporter.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    console.log(info.response)
+                }
+            })
+        } catch (error) {
+            console.log(error)
+        }
+
+        res.send('Email sent successfully!')
+
+
+    }
+
+})
+
+
+const resetPassword = AsyncHandler(async (req, res) => {
+    const { token, password } = req.body;
+    const findUser = await User.findOne({ resetToken: token })
+    if (!findUser) {
+        res.status(404);
+        throw new Error('Token Expired')
+    } else {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt)
+        findUser.password = hashedPassword
+        findUser.resetToken = null;
+        await findUser.save()
+        res.send('Password updated successfully')
+    }
+})
+
+
+
+
+
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: '1d'
@@ -86,5 +170,7 @@ const generateToken = (id) => {
 module.exports = {
     registerUser,
     loginUser,
-    getAllUser
+    getAllUser,
+    sendResetLink,
+    resetPassword
 }

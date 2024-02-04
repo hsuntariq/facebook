@@ -3,6 +3,7 @@ import { Button, Form } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { login } from '../../features/auth/authSlice'
+import { Link } from 'react-router-dom'
 const LogForm = ({ show }) => {
     const { isError, message } = useSelector(state => state.auth)
     const dispatch = useDispatch()
@@ -42,7 +43,7 @@ const LogForm = ({ show }) => {
                 <Button onClick={handleLogin} className='w-100 fw-bold p-2'>
                     Log In
                 </Button>
-                <a href="" className='text-primary text-decoration-none d-block mx-auto my-2 text-center'>Forgotten Password?</a>
+                <Link to="/forget-pass" className='text-primary text-decoration-none d-block mx-auto my-2 text-center'>Forgotten Password?</Link>
                 <hr />
                 <Button onClick={show} style={{ background: '#36A420' }} className='border-0 fw-medium py-2 px-2 d-block mx-auto'>
                     Create New Account
